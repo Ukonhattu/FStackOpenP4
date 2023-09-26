@@ -9,8 +9,12 @@ blogsRouter.get('/', (_, response) => {
         })
 })
 
-blogsRouter.post('/', (request, response) => {
-    const blog = new Blog(request.body)
+blogsRouter.post('/', async (request, response) => {
+    const user = request.user
+    const blog = new Blog({
+        ...request.body,
+        user: user._id
+    })
     if (!blog.likes) {
         blog.likes = 0
     }
@@ -24,14 +28,24 @@ blogsRouter.post('/', (request, response) => {
         })
 })
 
-blogsRouter.delete('/:id', (request, response) => {
+blogsRouter.delete('/:id', async (request, response) => {
+    const user = request.user
+    const blog = await Blog.findById(request.params.id)
+    if (blog.user.toString() !== user.id.toString()) {
+        return response.status(401).json({ error: 'unauthorized' })
+    }
     Blog.deleteOne({ _id: request.params.id })
         .then(result => {
             response.status(204).end()
         })
 })
 
-blogsRouter.put('/:id', (request, response) => {
+blogsRouter.put('/:id', async (request, response) => {
+    const user = request.user
+    const oldblog = await Blog.findById(request.params.id)
+    if (oldblog.user.toString() !== user.id.toString()) {
+        return response.status(401).json({ error: 'unauthorized' })
+    }
     const blog = request.body
     Blog.updateOne({ _id: request.params.id }, blog)
         .then(result => {
