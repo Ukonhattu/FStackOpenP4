@@ -1,6 +1,7 @@
 import Blog from "./Blog";
 import PropTypes from 'prop-types';
 const ListBlogs = ({blogs, user}) => {
+    
     if (blogs.length === 0) {
         return (
             <div>
@@ -9,7 +10,7 @@ const ListBlogs = ({blogs, user}) => {
         )
     }
     return (
-        <ul>
+        <ul className="blog">
             {blogs.sort((a, b) => b.likes - a.likes).map(blog => <li key={blog.id}><Blog blog={blog} user={user} /> </li>)}
         </ul>
     )

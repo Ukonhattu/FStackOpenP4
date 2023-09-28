@@ -22,7 +22,7 @@ const createBlog = async (blog, user) => {
 }
 
 const updateBlog = async (blog, user) => {
-    blog.delete(blog.user); // delete user property because it has been popupalated by mongoose
+    delete blog.user// delete user property because it has been popupalated by mongoose
     const response = await axios.put(`${baseUrl}/${blog.id}`, blog, {
         headers: {
             Authorization: `bearer ${user.token}`

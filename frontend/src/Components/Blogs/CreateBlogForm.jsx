@@ -3,7 +3,7 @@ import {useState} from 'react';
 import blogService from '../../services/blogService';
 import PropTypes from 'prop-types'
 
-const CreateBlogForm = ({user, setBlogs, handleNotification, createBlogToggle}) => {
+const CreateBlogForm = ({user, setBlogs, handleNotification, createBlogToggle, mockSubmit = null}) => {
     const [title, setTitle] = useState();
     const [author, setAuthor] = useState();
     const [url, setUrl] = useState();
@@ -26,21 +26,21 @@ const CreateBlogForm = ({user, setBlogs, handleNotification, createBlogToggle}) 
     return (
         <div className="create-blog-wrapper">
             <h1>Create Blog</h1>
-            <form onSubmit={handleSubmit}>
+            <form  aria-label='form' onSubmit={mockSubmit || handleSubmit}>
                 <label>
                     <p>Title</p>
-                    <input type="text" onChange={e => setTitle(e.target.value)} />
+                    <input id='title' type="text" onChange={e => setTitle(e.target.value)} placeholder='title' />
                 </label>
                 <label>
                     <p>Author</p>
-                    <input type="text" onChange={e => setAuthor(e.target.value)} />
+                    <input id='author' type="text" onChange={e => setAuthor(e.target.value)} placeholder='author' />
                 </label>
                 <label>
                     <p>Url</p>
-                    <input type="text" onChange={e => setUrl(e.target.value)} />
+                    <input id='url' type="text" onChange={e => setUrl(e.target.value)} placeholder='url'/>
                 </label>
                 <div>
-                    <button type="submit">Submit</button>
+                    <button id='create-button' type="submit" data-testid='send-button'>Submit</button>
                 </div>
             </form>
         </div>
@@ -50,8 +50,9 @@ const CreateBlogForm = ({user, setBlogs, handleNotification, createBlogToggle}) 
 export default CreateBlogForm
 
 CreateBlogForm.propTypes = {
-    user: PropTypes.object.isRequired,
-    setBlogs: PropTypes.func.isRequired,
-    handleNotification: PropTypes.func.isRequired,
-    createBlogToggle: PropTypes.object.isRequired
+    user: PropTypes.object,
+    setBlogs: PropTypes.func,
+    handleNotification: PropTypes.func,
+    createBlogToggle: PropTypes.object,
+    mockSubmit: PropTypes.func
 }

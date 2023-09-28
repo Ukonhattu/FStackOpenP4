@@ -3,7 +3,7 @@ const Blog = require('../models/Blog')
 
 blogsRouter.get('/', (_, response) => {
     Blog
-        .find({})
+        .find({}).populate('user')
         .then(blogs => {
             response.json(blogs)
         })

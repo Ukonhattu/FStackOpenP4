@@ -3,15 +3,24 @@ import Togglable from '../Toggable';
 import blogService from '../../services/blogService';
 //Render one blog
 // Blog {author, title, url, likes, user}
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog, user, mockHandler = null}) => {
 
     const handleLike = async () => {
+        if (mockHandler) {
+            mockHandler()
+            return
+        }
         await blogService.updateBlog({
             ...blog,
             likes: blog.likes + 1
         }, user)
     }
+
     const handleDelete = async () => {
+        if (mockHandler) {
+            mockHandler()
+            return
+        }
         if (!window.confirm(`Are you sure you want to delete ${blog.title}?`)) {
             return
         }     
@@ -25,10 +34,10 @@ const Blog = ({ blog, user }) => {
     return (
         <>
         <p>{blog.title} </p>
-        <Togglable buttonLabel="view" cancelButtonLabel="hide">
+        <Togglable buttonLabel="view" cancelButtonLabel="hide" data-testid="togglable">
         <p>{blog.author}</p>
         <p>{blog.url}</p> 
-        <p>{blog.likes} <button onClick={handleLike}> Like </button></p>
+        <p>{blog.likes} <button onClick={handleLike} data-testid="likebutton"> Like </button></p>
         <p>Added by: {blog.user.username}</p>
         <p>{isOwner && <button onClick={handleDelete}> Remove </button>}</p>
         </Togglable>
@@ -46,5 +55,6 @@ Blog.propTypes = {
         likes: PropTypes.number.isRequired,
         user: PropTypes.object.isRequired
     }),
-    user: PropTypes.object.isRequired
+    user: PropTypes.object.isRequired,
+    mockHandler: PropTypes.func
 }
